@@ -48,12 +48,12 @@ export default function LawPage({ params }: { params: Promise<{ id: string }> })
         </div>
       </div>
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">MP's Comment</h2>
-        <p>{law.mpComment || 'No comment yet.'}</p>
-      </div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Comments</h2>
-        {law.comments.map(comment => (
+  <h2 className="text-2xl font-semibold mb-2">MP&#39;s Comment</h2>
+  <p>{law.mpComment || 'No comment yet.'}</p>
+</div>
+<div className="mb-6">
+  <h2 className="text-2xl font-semibold mb-2">Comments</h2>
+  {law.comments.map(comment => (
           <div key={comment.id} className="border-b py-2">
             <p>{comment.text}</p>
             <p className="text-sm text-gray-500">- {comment.author}</p>
