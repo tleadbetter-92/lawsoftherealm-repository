@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import { getLaw, updateVotes, addComment } from '@/lib/mockDb'
+import React from 'react';
 
-export default function LawPage({ params }: { params: { id: string } }) {
-  const law = getLaw(params.id);
+export default function LawPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = React.use(params); // Resolve params
+  const law = getLaw(resolvedParams.id);
   const [comment, setComment] = useState('');
   const [author, setAuthor] = useState('');
 
