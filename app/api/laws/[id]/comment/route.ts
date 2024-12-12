@@ -4,10 +4,12 @@ import { ObjectId } from 'mongodb';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = params.id;
   try {
+    // Resolve the params promise
+    const { id } = await params;
+
     const comment = await request.json();
     const client = await clientPromise;
     const db = client.db("lawsite");
@@ -34,4 +36,4 @@ export async function POST(
     console.error(e);
     return NextResponse.json({ error: 'Failed to add comment' }, { status: 500 });
   }
-} 
+}
