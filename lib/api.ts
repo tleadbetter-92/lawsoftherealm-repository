@@ -1,4 +1,4 @@
-interface Law {
+export interface Law {
   id: string;
   shortTitle: string;
   longTitle: string;
@@ -9,7 +9,7 @@ interface Law {
   mpComment: string;
 }
 
-interface MP {
+export interface MP {
   name: string;
   constituency: string;
   agreedWithConstituents: number;

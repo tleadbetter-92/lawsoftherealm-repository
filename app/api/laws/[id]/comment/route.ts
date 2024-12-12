@@ -2,16 +2,9 @@ import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 
-// Use the correct Next.js App Router types
-interface RouteContext {
-  params: {
-    id: string;
-  }
-}
-
 export async function POST(
   request: Request,
-  { params }: RouteContext
+  { params }: { params: { id: string } }
 ) {
   try {
     const comment = await request.json();

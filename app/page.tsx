@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getLaws } from '@/lib/api'
 import SignInButton from './components/SignInButton';
+import type { Law } from '@/lib/api';
 
 export default async function Home() {
   try {
