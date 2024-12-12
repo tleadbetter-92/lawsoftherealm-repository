@@ -2,21 +2,23 @@ import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 
-interface Params {
-  id: string;
-}
+type Context = {
+  params: {
+    id: string;
+  };
+};
 
 export async function POST(
-  req: NextRequest,
-  { params }: { params: Params }
+  request: NextRequest,
+  context: Context
 ) {
   try {
-    const comment = await req.json();
+    const comment = await request.json();
     const client = await clientPromise;
     const db = client.db("lawsite");
     
     const result = await db.collection("laws").updateOne(
-      { _id: new ObjectId(params.id) },
+      { _id: new ObjectId(context.params.id) },
       { 
         $push: { 
           comments: {
