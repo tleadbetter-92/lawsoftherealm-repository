@@ -2,16 +2,9 @@ import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 
-type RouteParams = {
-  params: {
-    id: string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-
 export async function POST(
   request: Request,
-  { params }: RouteParams
+  context: { params: { id: string } }
 ) {
   try {
     const comment = await request.json();
@@ -19,7 +12,7 @@ export async function POST(
     const db = client.db("lawsite");
     
     const result = await db.collection("laws").updateOne(
-      { _id: new ObjectId(params.id) },
+      { _id: new ObjectId(context.params.id) },
       { 
         $push: { 
           comments: {
