@@ -1,4 +1,3 @@
-import { use } from 'react';
 import LawPageContent from './LawPageContent';
 
 export default async function LawPage({ params }: { params: { id: string } }) {

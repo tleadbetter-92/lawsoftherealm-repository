@@ -17,14 +17,6 @@ interface MP {
   noVote: number;
 }
 
-async function fetchWithErrorHandling(url: string, options?: RequestInit) {
-  const response = await fetch(url, options);
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-  return response.json();
-}
-
 export async function getLaws() {
   try {
     const baseUrl = process.env.NODE_ENV === 'development' 
