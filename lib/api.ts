@@ -27,9 +27,8 @@ async function fetchWithErrorHandling(url: string, options?: RequestInit) {
 
 export async function getLaws() {
   try {
-    // For development, use absolute URL
     const baseUrl = process.env.NODE_ENV === 'development' 
-      ? 'http://localhost:3000' 
+      ? 'http://localhost:3000'
       : process.env.NEXT_PUBLIC_API_BASE_URL;
 
     const response = await fetch(`${baseUrl}/api/laws`, {
