@@ -25,7 +25,7 @@ export default async function Home() {
           <SignInButton />
         </div>
         <div className="grid gap-6">
-          {laws.map(law => (
+          {laws.map((law: Law) => (
             <div key={law.id} className="border p-4 rounded-lg shadow">
               <h2 className="text-xl font-semibold mb-2">{law.shortTitle}</h2>
               <p className="text-gray-600 mb-4">{law.longTitle}</p>
