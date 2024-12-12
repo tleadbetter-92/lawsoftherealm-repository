@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const comment = await req.json();
@@ -12,7 +12,7 @@ export async function POST(
     const db = client.db("lawsite");
     
     const result = await db.collection("laws").updateOne(
-      { _id: new ObjectId(params.id) },
+      { _id: new ObjectId(context.params.id) },
       { 
         $push: { 
           comments: {
