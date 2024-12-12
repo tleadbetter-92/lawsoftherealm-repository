@@ -2,9 +2,16 @@ import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 
+// Use the correct Next.js App Router types
+interface RouteContext {
+  params: {
+    id: string;
+  }
+}
+
 export async function POST(
   request: Request,
-  context: { params: { id: string } }
+  { params }: RouteContext
 ) {
   try {
     const comment = await request.json();
@@ -12,7 +19,7 @@ export async function POST(
     const db = client.db("lawsite");
     
     const result = await db.collection("laws").updateOne(
-      { _id: new ObjectId(context.params.id) },
+      { _id: new ObjectId(params.id) },
       { 
         $push: { 
           comments: {
