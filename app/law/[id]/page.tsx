@@ -5,7 +5,8 @@ import { getLaw, updateVotes, addComment } from '@/lib/api';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 
-export default function LawPage({ params }: { params: { id: string } }) {
+// Create a wrapper component to handle the async params
+function LawPageContent({ id }: { id: string }) {
   const { data: session } = useSession();
   const [law, setLaw] = useState<any>(null);
   const [comment, setComment] = useState('');
@@ -15,7 +16,7 @@ export default function LawPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     const fetchLaw = async () => {
       try {
-        const data = await getLaw(params.id);
+        const data = await getLaw(id);
         setLaw(data);
       } catch (err) {
         setError('Failed to load law details');
@@ -24,7 +25,7 @@ export default function LawPage({ params }: { params: { id: string } }) {
     };
 
     fetchLaw();
-  }, [params.id]);
+  }, [id]);
 
   const handleVote = async (vote: 'yes' | 'no') => {
     if (!session) {
@@ -33,9 +34,9 @@ export default function LawPage({ params }: { params: { id: string } }) {
     }
     try {
       setLoading(true);
-      await updateVotes(params.id, vote);
+      await updateVotes(id, vote);
       // Refresh the law data after voting
-      const updatedLaw = await getLaw(params.id);
+      const updatedLaw = await getLaw(id);
       setLaw(updatedLaw);
     } catch (error) {
       console.error('Failed to vote:', error);
@@ -55,12 +56,12 @@ export default function LawPage({ params }: { params: { id: string } }) {
 
     try {
       setLoading(true);
-      await addComment(params.id, {
+      await addComment(id, {
         text: comment,
         author: session.user?.name || 'Anonymous'
       });
       // Refresh the law data after commenting
-      const updatedLaw = await getLaw(params.id);
+      const updatedLaw = await getLaw(id);
       setLaw(updatedLaw);
       setComment('');
     } catch (error) {
@@ -157,5 +158,13 @@ export default function LawPage({ params }: { params: { id: string } }) {
       </div>
     </div>
   );
+}
+
+// Main component that receives and handles the params
+export default async function LawPage({ params }: { params: { id: string } }) {
+  // Await the params before passing to the content component
+  const id = await Promise.resolve(params.id);
+  
+  return <LawPageContent id={id} />;
 }
 

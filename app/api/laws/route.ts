@@ -1,33 +1,21 @@
 import { NextResponse } from 'next/server';
-
-// Temporary mock data with the same structure as your interface
-const mockLaws = [
-  {
-    id: '1',
-    shortTitle: 'Environmental Protection Act',
-    longTitle: 'An act to protect and preserve environmental resources',
-    pdfLink: '#',
-    description: 'This act aims to protect our environment',
-    votes: { yes: 10, no: 5 },
-    comments: [],
-    mpComment: ''
-  },
-  {
-    id: '2',
-    shortTitle: 'Digital Privacy Act',
-    longTitle: 'An act concerning the protection of personal data and digital rights',
-    pdfLink: '#',
-    description: 'This act protects digital privacy rights',
-    votes: { yes: 15, no: 3 },
-    comments: [],
-    mpComment: ''
-  }
-];
+import clientPromise from '@/lib/mongodb';
 
 export async function GET() {
   try {
-    // Return mock data for now
-    return NextResponse.json(mockLaws);
+    const client = await clientPromise;
+    const db = client.db("lawsite");
+    
+    const laws = await db.collection("laws").find({}).toArray();
+
+    // Transform _id to id for all laws
+    const transformedLaws = laws.map(law => ({
+      ...law,
+      id: law._id.toString(),
+      _id: undefined
+    }));
+
+    return NextResponse.json(transformedLaws);
   } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json(

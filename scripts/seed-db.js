@@ -1,4 +1,7 @@
-import clientPromise from '../lib/mongodb';
+const { MongoClient } = require('mongodb');
+require('dotenv').config({ path: '.env.local' });
+
+const uri = process.env.MONGODB_URI;
 
 const initialLaws = [
   {
@@ -30,8 +33,12 @@ const mp = {
 };
 
 async function seed() {
+  let client;
+  
   try {
-    const client = await clientPromise;
+    client = new MongoClient(uri);
+    await client.connect();
+    
     const db = client.db("lawsite");
     
     // Clear existing data
@@ -43,10 +50,13 @@ async function seed() {
     await db.collection("mp").insertOne(mp);
     
     console.log('Database seeded successfully!');
-    process.exit(0);
   } catch (error) {
     console.error('Error seeding database:', error);
     process.exit(1);
+  } finally {
+    if (client) {
+      await client.close();
+    }
   }
 }
 
