@@ -2,23 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 
-type RouteContext = {
-  params: {
-    id: string;
-  };
-};
-
 export async function POST(
   request: NextRequest,
-  context: RouteContext
+  { params }: { params: { id: string } }
 ) {
+  const id = params.id;
   try {
     const comment = await request.json();
     const client = await clientPromise;
     const db = client.db("lawsite");
     
     const result = await db.collection("laws").updateOne(
-      { _id: new ObjectId(context.params.id) },
+      { _id: new ObjectId(id) },
       { 
         $push: { 
           comments: {
