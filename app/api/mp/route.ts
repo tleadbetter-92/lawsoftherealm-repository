@@ -1,20 +1,21 @@
 import { NextResponse } from 'next/server';
-import clientPromise from '@/lib/mongodb';
+
+const mockMP = {
+  name: 'Jane Smith',
+  constituency: 'Central District',
+  agreedWithConstituents: 45,
+  disagreedWithConstituents: 12,
+  noVote: 8
+};
 
 export async function GET() {
   try {
-    const client = await clientPromise;
-    const db = client.db("lawsite");
-    
-    const mp = await db.collection("mp").findOne({});
-    
-    if (!mp) {
-      return NextResponse.json({ error: 'MP not found' }, { status: 404 });
-    }
-
-    return NextResponse.json(mp);
-  } catch (e) {
-    console.error(e);
-    return NextResponse.json({ error: 'Failed to fetch MP data' }, { status: 500 });
+    return NextResponse.json(mockMP);
+  } catch (error) {
+    console.error('Server error:', error);
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }

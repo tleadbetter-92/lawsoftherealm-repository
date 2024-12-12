@@ -27,27 +27,28 @@ async function fetchWithErrorHandling(url: string, options?: RequestInit) {
 
 export async function getLaws() {
   try {
-    // Use absolute URL with origin for server components
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
-      : 'http://localhost:3000';
-    
+    // For development, use absolute URL
+    const baseUrl = process.env.NODE_ENV === 'development' 
+      ? 'http://localhost:3000' 
+      : process.env.NEXT_PUBLIC_API_BASE_URL;
+
     const response = await fetch(`${baseUrl}/api/laws`, {
-      cache: 'no-store',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
+      next: { revalidate: 0 }
     });
     
     if (!response.ok) {
-      throw new Error('Failed to fetch laws');
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     
     const data = await response.json();
     return data;
   } catch (error) {
     console.error('Error fetching laws:', error);
-    throw error;
+    throw new Error('Failed to fetch laws');
   }
 }
 
@@ -76,5 +77,26 @@ export async function addComment(id: string, comment: { text: string; author: st
 }
 
 export async function getMP(): Promise<MP> {
-  return fetchWithErrorHandling('/api/mp');
+  try {
+    const baseUrl = process.env.NODE_ENV === 'development' 
+      ? 'http://localhost:3000' 
+      : process.env.NEXT_PUBLIC_API_BASE_URL;
+
+    const response = await fetch(`${baseUrl}/api/mp`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      next: { revalidate: 0 }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching MP:', error);
+    throw new Error('Failed to fetch MP data');
+  }
 } 
