@@ -6,12 +6,13 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  const id = params.id;
   try {
     const client = await clientPromise;
     const db = client.db("lawsite");
     
     const law = await db.collection("laws").findOne(
-      { _id: new ObjectId(params.id) }
+      { _id: new ObjectId(id) }
     );
 
     if (!law) {
