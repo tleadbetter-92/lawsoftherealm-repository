@@ -1,7 +1,11 @@
 import LawPageContent from './LawPageContent';
 
-export default async function LawPage({ params }: { params: { id: string } }) {
-  const id = params.id;
+type Props = {
+  params: { id: string }
+}
+
+export default async function LawPage({ params }: Props) {
+  const { id } = params;
   
   return (
     <div>

@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    // Resolve the params promise
-    const { id } = await params;
+type Props = {
+  params: { id: string }
+}
 
+export async function POST(request: NextRequest, { params }: Props) {
+  const { id } = params;
+  
+  try {
     const comment = await request.json();
     const client = await clientPromise;
     const db = client.db("lawsite");
