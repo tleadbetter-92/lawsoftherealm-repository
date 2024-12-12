@@ -2,11 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 
-type Props = {
-  params: { id: string }
-}
-
-export async function GET(request: NextRequest, { params }: Props) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const { id } = params;
   try {
     const client = await clientPromise;
@@ -37,8 +36,11 @@ export async function GET(request: NextRequest, { params }: Props) {
   }
 }
 
-export async function PUT(request: NextRequest, { params }: Props) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const { id } = params;
-  
-  // Rest of your handler code...
+  // Implement PUT logic here
+  return NextResponse.json({ message: 'Not implemented' }, { status: 501 });
 }
