@@ -37,7 +37,7 @@ export async function POST(
       {
         $inc: { [`votes.${vote}`]: 1 },
         $push: {
-          voters: {
+          "votes.voters": {
             email: session.user.email,
             name: session.user.name,
             vote: vote,
