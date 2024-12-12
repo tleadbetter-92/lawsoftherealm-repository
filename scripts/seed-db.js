@@ -9,7 +9,11 @@ const initialLaws = [
     longTitle: 'An act to protect and preserve environmental resources',
     pdfLink: 'https://example.com/env-act.pdf',
     description: 'This act aims to protect our environment by implementing strict guidelines.',
-    votes: { yes: 0, no: 0 },
+    votes: { 
+      yes: 0, 
+      no: 0,
+      voters: [] // Array to store user IDs who have voted
+    },
     comments: [],
     mpComment: 'I support this environmental initiative.'
   },
@@ -18,7 +22,11 @@ const initialLaws = [
     longTitle: 'An act concerning digital privacy rights',
     pdfLink: 'https://example.com/privacy-act.pdf',
     description: 'This act strengthens online privacy protections.',
-    votes: { yes: 0, no: 0 },
+    votes: { 
+      yes: 0, 
+      no: 0,
+      voters: [] // Array to store user IDs who have voted
+    },
     comments: [],
     mpComment: 'Privacy is a fundamental right.'
   }

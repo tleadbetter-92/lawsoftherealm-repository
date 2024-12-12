@@ -11,12 +11,19 @@ export default function LawPageContent({ id }: { id: string }) {
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasVoted, setHasVoted] = useState(false);
 
   useEffect(() => {
     const fetchLaw = async () => {
       try {
         const data = await getLaw(id);
         setLaw(data);
+        if (session?.user?.email) {
+          const hasUserVoted = data.votes.voters?.some(
+            (voter: any) => voter.email === session.user.email
+          );
+          setHasVoted(hasUserVoted);
+        }
       } catch (err) {
         setError('Failed to load law details');
         console.error('Error fetching law:', err);
@@ -24,11 +31,15 @@ export default function LawPageContent({ id }: { id: string }) {
     };
 
     fetchLaw();
-  }, [id]);
+  }, [id, session]);
 
   const handleVote = (vote: 'yes' | 'no') => {
     if (!session) {
       alert('Please sign in to vote');
+      return;
+    }
+    if (hasVoted) {
+      alert('You have already voted on this law');
       return;
     }
     setLoading(true);
@@ -36,10 +47,16 @@ export default function LawPageContent({ id }: { id: string }) {
       .then(() => getLaw(id))
       .then(updatedLaw => {
         setLaw(updatedLaw);
+        setHasVoted(true);
       })
       .catch(error => {
         console.error('Failed to vote:', error);
-        alert('Failed to submit vote');
+        if (error.message.includes('already voted')) {
+          alert('You have already voted on this law');
+          setHasVoted(true);
+        } else {
+          alert('Failed to submit vote');
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -105,17 +122,19 @@ export default function LawPageContent({ id }: { id: string }) {
           <div className="flex gap-4 mb-6">
             <button
               onClick={() => handleVote('yes')}
-              disabled={loading}
+              disabled={loading || hasVoted}
               className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg disabled:opacity-50"
             >
               Yes ({law.votes.yes})
+              {hasVoted && law.votes.voters.find((v: any) => v.email === session?.user?.email)?.vote === 'yes' && ' ✓'}
             </button>
             <button
               onClick={() => handleVote('no')}
-              disabled={loading}
+              disabled={loading || hasVoted}
               className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg disabled:opacity-50"
             >
               No ({law.votes.no})
+              {hasVoted && law.votes.voters.find((v: any) => v.email === session?.user?.email)?.vote === 'no' && ' ✓'}
             </button>
           </div>
         </div>
