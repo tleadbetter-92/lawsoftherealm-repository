@@ -1,8 +1,8 @@
 import Image from 'next/image'
-import { getMP } from '@/lib/mockDb'
+import { getMP } from '@/lib/api'
 
-export default function MPPage() {
-  const mp = getMP();
+export default async function MPPage() {
+  const mp = await getMP();
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -39,6 +39,6 @@ export default function MPPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 

@@ -1,27 +1,56 @@
 'use client'
 
 import { useState } from 'react'
-import { getLaw, updateVotes, addComment } from '@/lib/mockDb'
+import { getLaw, updateVotes, addComment } from '@/lib/api'
 import React from 'react';
 
-export default function LawPage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = React.use(params); // Resolve params
-  const law = getLaw(resolvedParams.id);
+export default function LawPage({ params }: { params: { id: string } }) {
+  const [law, setLaw] = useState<any>(null);
   const [comment, setComment] = useState('');
   const [author, setAuthor] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  React.useEffect(() => {
+    getLaw(params.id)
+      .then(data => {
+        setLaw(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError('Failed to load law');
+        setLoading(false);
+      });
+  }, [params.id]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
   if (!law) return <div>Law not found</div>;
 
-  const handleVote = (vote: 'yes' | 'no') => {
-    updateVotes(law.id, vote);
+  const handleVote = async (vote: 'yes' | 'no') => {
+    try {
+      await updateVotes(law.id, vote);
+      // Refresh law data after voting
+      const updatedLaw = await getLaw(law.id);
+      setLaw(updatedLaw);
+    } catch (err) {
+      console.error('Failed to update vote:', err);
+    }
   };
 
-  const handleCommentSubmit = (e: React.FormEvent) => {
+  const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (comment && author) {
-      addComment(law.id, { text: comment, author });
-      setComment('');
-      setAuthor('');
+      try {
+        await addComment(law.id, { text: comment, author });
+        // Refresh law data after commenting
+        const updatedLaw = await getLaw(law.id);
+        setLaw(updatedLaw);
+        setComment('');
+        setAuthor('');
+      } catch (err) {
+        console.error('Failed to add comment:', err);
+      }
     }
   };
 
@@ -48,12 +77,12 @@ export default function LawPage({ params }: { params: Promise<{ id: string }> })
         </div>
       </div>
       <div className="mb-6">
-  <h2 className="text-2xl font-semibold mb-2">MP&#39;s Comment</h2>
-  <p>{law.mpComment || 'No comment yet.'}</p>
-</div>
-<div className="mb-6">
-  <h2 className="text-2xl font-semibold mb-2">Comments</h2>
-  {law.comments.map(comment => (
+        <h2 className="text-2xl font-semibold mb-2">MP&#39;s Comment</h2>
+        <p>{law.mpComment || 'No comment yet.'}</p>
+      </div>
+      <div className="mb-6">
+        <h2 className="text-2xl font-semibold mb-2">Comments</h2>
+        {law.comments.map(comment => (
           <div key={comment.id} className="border-b py-2">
             <p>{comment.text}</p>
             <p className="text-sm text-gray-500">- {comment.author}</p>
@@ -81,6 +110,6 @@ export default function LawPage({ params }: { params: Promise<{ id: string }> })
         </form>
       </div>
     </div>
-  )
+  );
 }
 
