@@ -11,9 +11,9 @@ const initialLaws = [
     description: 'The Arbitration Bill [HL] aims to update the Arbitration Act 1996 by clarifying legal rules and processes in arbitration, such as the impartiality of arbitrators, their duties and protections, court powers in arbitration cases, and the procedures for appealing arbitration decisions',
     votes: { 
       yes: 0, 
-      no: 0
+      no: 0,
+      voters: []
     },
-    voters: [],
     comments: [],
     mpComment: 'No comment'
   },

@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import { getLaw, updateVotes, addComment } from '@/lib/api';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import type { Law, Voter } from '@/lib/api';
 
 export default function LawPageContent({ id }: { id: string }) {
   const { data: session } = useSession();
-  const [law, setLaw] = useState<any>(null);
+  const [law, setLaw] = useState<Law | null>(null);
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,9 +21,9 @@ export default function LawPageContent({ id }: { id: string }) {
         setLaw(data);
         if (session?.user?.email) {
           const hasUserVoted = data.votes.voters?.some(
-            (voter: any) => voter.email === session.user.email
+            (voter: Voter) => voter.email === session.user.email
           );
-          setHasVoted(hasUserVoted);
+          setHasVoted(!!hasUserVoted);
         }
       } catch (err) {
         setError('Failed to load law details');

@@ -1,10 +1,21 @@
+export interface Voter {
+  email: string;
+  name: string;
+  vote: 'yes' | 'no';
+  timestamp: Date;
+}
+
 export interface Law {
   id: string;
   shortTitle: string;
   longTitle: string;
-  pdfLink: string;
+  pdfLink: string | null;
   description: string;
-  votes: { yes: number; no: number };
+  votes: {
+    yes: number;
+    no: number;
+    voters: Voter[];
+  };
   comments: { id: string; text: string; author: string }[];
   mpComment: string;
 }
