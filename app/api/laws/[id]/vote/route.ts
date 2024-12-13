@@ -21,7 +21,9 @@ export async function POST(
     // Check if user has already voted
     const existingVote = await db.collection("laws").findOne({
       _id: new ObjectId(params.id),
-      'votes.voters.email': session.user.email
+      voters: {
+        $elemMatch: { email: session.user.email }
+      }
     });
 
     if (existingVote) {
@@ -31,15 +33,15 @@ export async function POST(
       );
     }
 
-    // Add vote and record voter with correct MongoDB syntax
+    // Add vote and record voter
     const result = await db.collection("laws").updateOne(
       { _id: new ObjectId(params.id) },
-      {
+      { 
         $inc: { [`votes.${vote}`]: 1 },
         $push: {
           voters: {
             email: session.user.email,
-            name: session.user.name,
+            name: session.user.name || 'Anonymous',
             vote: vote,
             timestamp: new Date()
           }
