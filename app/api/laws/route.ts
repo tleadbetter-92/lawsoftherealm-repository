@@ -1,31 +1,40 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET() {
+  let client;
   try {
-    const client = await clientPromise;
+    console.log('API: Connecting to MongoDB...');
+    client = await clientPromise;
     const db = client.db("lawsite");
     
-    console.log('Attempting to fetch laws...');
+    console.log('API: Successfully connected, attempting to fetch laws...');
     
     const laws = await db.collection("laws").find({}).toArray();
     
-    console.log(`Found ${laws.length} laws`);
+    console.log(`API: Found ${laws.length} laws`);
 
-    const transformedLaws = laws.map(law => ({
-      ...law,
-      id: law._id.toString(),
-      _id: undefined
-    }));
+    const transformedLaws = laws.map(law => {
+      console.log('API: Transforming law:', law._id.toString());
+      return {
+        ...law,
+        id: law._id.toString(),
+        _id: undefined
+      };
+    });
 
+    console.log('API: Successfully transformed all laws');
     return NextResponse.json(transformedLaws);
   } catch (error: unknown) {
-    console.error('Server error:', error);
+    console.error('API: Server error:', error);
     
-    // Create an error message based on the error type
     let errorMessage = 'Unknown error occurred';
     if (error instanceof Error) {
       errorMessage = error.message;
+      console.error('API: Error details:', error.stack);
     } else if (typeof error === 'string') {
       errorMessage = error;
     }

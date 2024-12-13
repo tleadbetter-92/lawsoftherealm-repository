@@ -3,6 +3,11 @@ require('dotenv').config({ path: '.env.local' });
 
 const uri = process.env.MONGODB_URI;
 
+if (!uri) {
+  console.error('MONGODB_URI is not defined in .env.local');
+  process.exit(1);
+}
+
 const initialLaws = [
   {
     shortTitle: 'The Arbitration Bill',
@@ -135,26 +140,34 @@ async function seed() {
   let client;
   
   try {
+    console.log('Connecting to MongoDB...');
     client = new MongoClient(uri);
     await client.connect();
+    console.log('Successfully connected to MongoDB');
     
     const db = client.db("lawsite");
     
     // Clear existing data
+    console.log('Clearing existing data...');
     await db.collection("laws").deleteMany({});
     await db.collection("mp").deleteMany({});
     
     // Insert new data
+    console.log('Inserting new data...');
     await db.collection("laws").insertMany(initialLaws);
     await db.collection("mp").insertOne(mp);
     
     console.log('Database seeded successfully!');
   } catch (error) {
     console.error('Error seeding database:', error);
+    if (error.code === 8000) {
+      console.error('\nAuthentication failed. Please check your MongoDB username and password in .env.local');
+    }
     process.exit(1);
   } finally {
     if (client) {
       await client.close();
+      console.log('MongoDB connection closed');
     }
   }
 }

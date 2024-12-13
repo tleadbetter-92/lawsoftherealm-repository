@@ -34,23 +34,28 @@ export async function getLaws() {
       ? 'http://localhost:3000'
       : process.env.NEXT_PUBLIC_API_BASE_URL;
 
+    if (!baseUrl) {
+      throw new Error('API base URL is not defined');
+    }
+
     const response = await fetch(`${baseUrl}/api/laws`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      next: { revalidate: 0 }
+      cache: 'no-store'
     });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorData = await response.json();
+      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
     }
     
     const data = await response.json();
     return data;
   } catch (error) {
     console.error('Error fetching laws:', error);
-    throw new Error('Failed to fetch laws');
+    throw error;
   }
 }
 
