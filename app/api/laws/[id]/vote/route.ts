@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../auth/[...nextauth]/options';
 
 export async function POST(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -21,7 +21,7 @@ export async function POST(
     // Check if user has already voted
     const existingVote = await db.collection("laws").findOne({
       _id: new ObjectId(params.id),
-      "votes.voters.email": session.user.email
+      'votes.voters.email': session.user.email
     });
 
     if (existingVote) {
@@ -37,7 +37,7 @@ export async function POST(
       {
         $inc: { [`votes.${vote}`]: 1 },
         $push: {
-          "votes.voters": {
+          voters: {
             email: session.user.email,
             name: session.user.name,
             vote: vote,

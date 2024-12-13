@@ -11,9 +11,9 @@ const initialLaws = [
     description: 'The Arbitration Bill [HL] aims to update the Arbitration Act 1996 by clarifying legal rules and processes in arbitration, such as the impartiality of arbitrators, their duties and protections, court powers in arbitration cases, and the procedures for appealing arbitration decisions',
     votes: { 
       yes: 0, 
-      no: 0,
-      voters: []
+      no: 0
     },
+    voters: [],
     comments: [],
     mpComment: 'No comment'
   },
@@ -24,9 +24,9 @@ const initialLaws = [
     description: 'This bill aims to provide legal framework for assisted dying under strict safeguards for terminally ill adults.',
     votes: { 
       yes: 0, 
-      no: 0,
-      voters: []
+      no: 0
     },
+    voters: [],
     comments: [],
     mpComment: 'No comment'
   },
@@ -37,9 +37,9 @@ const initialLaws = [
     description: 'This bill aims to make provision about the serving of documentation relevant to the ending of asylum support following an asylum determination; and connected purposes.',
     votes: { 
       yes: 0, 
-      no: 0,
-      voters: []
+      no: 0
     },
+    voters: [],
     comments: [],
     mpComment: 'No comment'
   },
@@ -50,9 +50,9 @@ const initialLaws = [
     description: 'This bill focuses on banking regulations and recapitalization procedures under the Banking Act 2009.',
     votes: { 
       yes: 0, 
-      no: 0,
-      voters: []
+      no: 0
     },
+    voters: [],
     comments: [],
     mpComment: 'No comment'
   },
@@ -63,9 +63,9 @@ const initialLaws = [
     description: 'This act establishes new responsibilities for the Treasury and OBR regarding fiscal measures.',
     votes: { 
       yes: 0, 
-      no: 0,
-      voters: []
+      no: 0
     },
+    voters: [],
     comments: [],
     mpComment: 'No comment'
   },
@@ -76,9 +76,9 @@ const initialLaws = [
     description: 'This bill addresses the legal status and privileges of the CPA and ICRC.',
     votes: { 
       yes: 0, 
-      no: 0,
-      voters: []
+      no: 0
     },
+    voters: [],
     comments: [],
     mpComment: 'No comment'
   },
@@ -89,9 +89,9 @@ const initialLaws = [
     description: 'This bill establishes requirements for annual reporting on abortion-related complications in England.',
     votes: { 
       yes: 0, 
-      no: 0,
-      voters: []
+      no: 0
     },
+    voters: [],
     comments: [],
     mpComment: 'No comment'
   },
@@ -102,9 +102,9 @@ const initialLaws = [
     description: 'This bill proposes amendments to the existing Crown Estate Act 1961.',
     votes: { 
       yes: 0, 
-      no: 0,
-      voters: []
+      no: 0
     },
+    voters: [],
     comments: [],
     mpComment: 'No comment'
   },
@@ -115,9 +115,9 @@ const initialLaws = [
     description: 'This bill aims to transfer Crown Estate responsibilities in Wales to the Welsh Government.',
     votes: { 
       yes: 0, 
-      no: 0,
-      voters: []
+      no: 0
     },
+    voters: [],
     comments: [],
     mpComment: 'No comment'
   }
