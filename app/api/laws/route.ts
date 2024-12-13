@@ -6,9 +6,12 @@ export async function GET() {
     const client = await clientPromise;
     const db = client.db("lawsite");
     
+    console.log('Attempting to fetch laws...');
+    
     const laws = await db.collection("laws").find({}).toArray();
+    
+    console.log(`Found ${laws.length} laws`);
 
-    // Transform _id to id for all laws
     const transformedLaws = laws.map(law => ({
       ...law,
       id: law._id.toString(),
@@ -19,7 +22,10 @@ export async function GET() {
   } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { 
+        error: 'Internal Server Error',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined 
+      },
       { status: 500 }
     );
   }
