@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
+type RouteParams = {
+  params: { id: string }
+}
+
+export async function GET(request: NextRequest, context: RouteParams) {
   try {
+    const { id } = context.params;
     const client = await clientPromise;
     const db = client.db("lawsite");
     
@@ -19,7 +20,6 @@ export async function GET(
       return NextResponse.json({ error: 'Law not found' }, { status: 404 });
     }
 
-    // Transform _id to id for frontend compatibility
     const transformedLaw = {
       ...law,
       id: law._id.toString(),
@@ -36,11 +36,12 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
-  // Implement PUT logic here
-  return NextResponse.json({ message: 'Not implemented' }, { status: 501 });
+export async function PUT(request: NextRequest, context: RouteParams) {
+  try {
+    const { id } = context.params;
+    // Implement PUT logic here using the id
+    return NextResponse.json({ message: 'Not implemented', id }, { status: 501 });
+  } catch (error) {
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  }
 }
