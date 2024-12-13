@@ -19,9 +19,10 @@ export default function LawPageContent({ id }: { id: string }) {
       try {
         const data = await getLaw(id);
         setLaw(data);
-        if (session?.user?.email) {
+        const userEmail = session?.user?.email;
+        if (userEmail) {
           const hasUserVoted = data.votes.voters?.some(
-            (voter: Voter) => voter.email === session.user.email
+            (voter: Voter) => voter.email === userEmail
           );
           setHasVoted(!!hasUserVoted);
         }
@@ -35,7 +36,7 @@ export default function LawPageContent({ id }: { id: string }) {
   }, [id, session]);
 
   const handleVote = (vote: 'yes' | 'no') => {
-    if (!session) {
+    if (!session?.user) {
       alert('Please sign in to vote');
       return;
     }
