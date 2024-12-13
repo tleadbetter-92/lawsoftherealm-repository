@@ -19,12 +19,21 @@ export async function GET() {
     }));
 
     return NextResponse.json(transformedLaws);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Server error:', error);
+    
+    // Create an error message based on the error type
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    }
+
     return NextResponse.json(
       { 
         error: 'Internal Server Error',
-        details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined 
+        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined 
       },
       { status: 500 }
     );
